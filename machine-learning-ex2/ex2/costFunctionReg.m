@@ -17,21 +17,18 @@ grad = zeros(size(theta));
 %               Compute the partial derivatives and set grad to the partial
 %               derivatives of the cost w.r.t. each parameter in theta
 
-hypothesis = sigmoid(X * theta); %hypothesis is a 100x1 matrix
 
-temp1 = (-y)' * (log(hypothesis)); %1x100 * 100x1 = 1x1
-temp2 = (1 - y)' * (log(1 - hypothesis)); %1x100 * 100x1 = 1x1
-temp3 = (1 / m) * sum(temp1 - temp2);
-temp4 = (lambda / (2 * m)) * sumsqr(theta(2: (size(theta, 1)), 1));
+%h is the regression function, here a vector
+h= 1./(1+exp(-X*theta))
+%cost is a vector of cost of each observation's deviation 
+c=-y.*log(h)-(1-y).*log(1-h)
+%compute average value of cost vector
+J= 1./m * sum(c)+lambda./(2*m)*sum(theta(2:end).^2)
+%compute gradient
 
-J = temp3 + temp4;
-
-grad(1) = (1 / m) * sum((hypothesis - y));
-
-for index = 2:size(theta)
-	grad(index) = (((1 / m) * sum((hypothesis - y) .* X(:, index))) + ((lambda / m) * theta(index)));
-end
-
+temp= 1./m*(transpose(X)*(h-y))
+grad(1)=temp(1)
+grad(2:end)=temp(2:end)+lambda./m*theta(2:end)
 
 
 % =============================================================

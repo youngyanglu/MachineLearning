@@ -3,16 +3,17 @@ function [all_theta] = oneVsAll(X, y, num_labels, lambda)
 %the classifiers in a matrix all_theta, where the i-th row of all_theta 
 %corresponds to the classifier for label i
 %   [all_theta] = ONEVSALL(X, y, num_labels, lambda) trains num_labels
-%   logisitc regression classifiers and returns each of these classifiers
+%   logistic regression classifiers and returns each of these classifiers
 %   in a matrix all_theta, where the i-th row of all_theta corresponds 
 %   to the classifier for label i
 
 % Some useful variables
-m = size(X, 1);
-n = size(X, 2);
+m = size(X, 1); %number of observations
+n = size(X, 2); %number of pixels per observation
 
-% You need to return the following variables correctly all_theta = zeros(num_labels, n + 1);
+% You need to return the following variables correctly 
 all_theta = zeros(num_labels, n + 1);
+
 % Add ones to the X data matrix
 X = [ones(m, 1) X];
 
@@ -33,25 +34,22 @@ X = [ones(m, 1) X];
 %       fmincg works similarly to fminunc, but is more efficient when we
 %       are dealing with large number of parameters.
 %
-% Example Code for fmincg:
 %
-%     % Set Initial theta
-%     initial_theta = zeros(n + 1, 1);
-%     
-%     % Set options for fminunc
-%     options = optimset('GradObj', 'on', 'MaxIter', 50);
-% 
-%     % Run fmincg to obtain the optimal theta
-%     % This function will return theta and the cost 
-%     [theta] = ...
-%         fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), ...
-%                 initial_theta, options);
-%
+	for c= 1:num_labels
+        % Set Initial theta
+        initial_theta = zeros(n + 1, 1);
+    
+        % Set options for fminunc
+        options = optimset('GradObj', 'on', 'MaxIter', 50);
 
-for i = 1:num_labels
-	tempTheta = zeros(n + 1, 1);
-	options = optimset('GradObj', 'on', 'MaxIter', 50);
-	c = i
-	tempTheta = fmincg(@(t)(lrCostFunction(t, X, (y == c), lambda)), tempTheta, options);
-	all_theta(i, :) = tempTheta';
+        %Run fmincg to obtain the optimal theta
+        % This function will return theta and the cost 
+        [theta] = ...
+        fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), ...
+           initial_theta, options);
+        all_theta(c,:)=theta(:)
+    end 
+% =========================================================================
+
+
 end

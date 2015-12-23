@@ -1,4 +1,3 @@
-
 function [J, grad] = lrCostFunction(theta, X, y, lambda)
 %LRCOSTFUNCTION Compute cost and gradient for logistic regression with 
 %regularization
@@ -37,19 +36,17 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
-hypothesis = sigmoid(X * theta);
+%h is the regression function, here a vector
+h= 1./(1+exp(-X*theta))
+%cost is a vector of cost of each observation's deviation 
+c=-y.*log(h)-(1-y).*log(1-h)
+%compute average value of cost vector
+J= 1./m * sum(c)+lambda./(2*m)*sum(theta(2:end).^2)
+%compute gradient
 
-cost = (((-y) .* log(hypothesis)) - ((1 - y) .* log(1 - hypothesis)));
-J = (((1 / m) * sum(cost)) + ((lambda / (2 * m)) * (sumsqr(theta(2:end)))));
-
-deltaCost = hypothesis - y;
-tempTheta = theta;
-tempTheta(1) = 0;
-grad = ((1 / m) * (X' * deltaCost) + ((lambda / (m)) * tempTheta));
-
-
-
-
+temp= 1./m*(transpose(X)*(h-y))
+grad(1)=temp(1)
+grad(2:end)=temp(2:end)+lambda./m*theta(2:end)
 
 % =============================================================
 

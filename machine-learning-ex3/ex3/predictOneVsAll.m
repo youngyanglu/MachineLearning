@@ -8,11 +8,11 @@ function p = predictOneVsAll(all_theta, X)
 %  of values from 1..K (e.g., p = [1; 3; 1; 2] predicts classes 1, 3, 1, 2
 %  for 4 examples) 
 
-m = size(X, 1);
-num_labels = size(all_theta, 1);
+m = size(X, 1); %number of observations to classify
+num_labels = size(all_theta, 1); % no. of classes for classification
 
 % You need to return the following variables correctly 
-p = zeros(size(X, 1), 1);
+p = zeros(size(X, 1), 1); %vector corresponding to each observation
 
 % Add ones to the X data matrix
 X = [ones(m, 1) X];
@@ -29,12 +29,11 @@ X = [ones(m, 1) X];
 %       are in rows, then, you can use max(A, [], 2) to obtain the max 
 %       for each row.
 %       
-
-p = X * all_theta';
-[a, p] = max(p, [], 2);
-
-
-
+z=all_theta*transpose(X)
+%g is a matrix where each column result for one observation
+g= 1 ./ (1 + exp(-z))
+[Y,I]=max(g)
+p=transpose(I)
 
 
 % =========================================================================

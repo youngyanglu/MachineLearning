@@ -19,22 +19,14 @@ grad = zeros(size(theta));
 %
 % Note: grad should have the same dimensions as theta
 %
-
-hypothesis = sigmoid(X * theta); %hypothesis is a 100x1 matrix
-
-temp1 = (-y)' * (log(hypothesis)); %1x100 * 100x1 = 1x1
-temp2 = (1 - y)' * (log(1 - hypothesis)); %1x100 * 100x1 = 1x1
-
-J = (1 / m) * sum(temp1 - temp2);
-
-for index = 1:size(theta)
-	grad(index) = (1 / m) * sum((hypothesis - y) .* X(:, index));
-end
-
-
-
-
-
+%h is the regression function, here a vector
+h= 1./(1+exp(-X*theta))
+%cost is a vector of cost of each observation's deviation 
+c=-y.*log(h)-(1-y).*log(1-h)
+%compute average value of cost vector
+J= 1./m * sum(c)
+%compute gradient
+grad= 1./m*(transpose(X)*(h-y))
 
 % =============================================================
 
